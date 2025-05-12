@@ -1,0 +1,531 @@
+#mformMFDiv {
+    max-width: 1000px !important;
+    text-align: center !important;
+    margin: 100px auto !important;
+}
+
+/* .mformButton, .mformClip {
+    margin-left: 30px !important;
+    max-width: 480px !important;
+    padding: 5px !important;
+    word-break: break-all !important;
+    text-transform: none !important;
+    white-space: normal!important;
+} */
+.mformButton,
+.content-textarea {
+    align-items: center !important;
+    background-color: #FFFFFF !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: .25rem !important;
+    box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0 !important;
+    box-sizing: border-box !important;
+    color: rgba(0, 0, 0, 0.85) !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    justify-content: center !important;
+    line-height: 1.25 !important;
+    margin: 0 !important;
+    min-height: 3rem !important;
+    padding: calc(.875rem - 1px) calc(1.5rem - 1px) !important;
+    position: relative !important;
+    text-decoration: none !important;
+    transition: all 250ms !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    touch-action: manipulation !important;
+    vertical-align: baseline !important;
+    width: auto !important;
+}
+
+.mformButton:hover,
+.mformButton:focus,
+.content-textarea:hover,
+.content-textarea:focus {
+    border-color: rgba(0, 0, 0, 0.15) !important;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+}
+
+.mformButton:hover,
+.content-textarea:hover {
+    transform: translateY(-1px) !important;
+}
+
+.mformButton:active,
+.content-textarea:active {
+    background-color: #F0F0F1 !important;
+    border-color: rgba(0, 0, 0, 0.15) !important;
+    box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+    transform: translateY(0) !important;
+}
+
+.MFModal {
+    display: none;
+    position: fixed !important;
+    z-index: 99999 !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: auto !important;
+    background-color: rgb(0, 0, 0) !important;
+    background-color: rgba(0, 0, 0, 0.4) !important;
+    -webkit-animation-name: animatetop !important;
+    -webkit-animation-duration: 0.4s !important;
+}
+
+.MFModal-content {
+    background-color: #e5faef !important;
+    margin: 15% auto !important;
+    padding: 20px !important;
+    border: 1px solid #888 !important;
+    width: 80% !important;
+    -webkit-animation-name: animatetop !important;
+    -webkit-animation-duration: 0.4s !important;
+}
+
+.button-container {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 20px !important;
+}
+
+.close-container {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.content-textarea {
+    margin-left: 30px !important;
+    white-space: pre-line !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    background-color: #f3f3f3 !important;
+    border: 1px solid #858282 !important;
+    border-radius: 3px !important;
+    padding: 5px !important;
+}
+
+.Tabclose {
+    color: #888 !important;
+    font-size: 15px !important;
+    margin-right: 30px !important;
+    margin: 0;
+    width: 160px !important;
+    background: #f2f2f2 !important;
+    border: 1px solid rgb(170, 170, 170) !important;
+    padding: 4px 16px !important;
+}
+
+.MFinfo {
+    max-width: 350px !important;
+    font-size: 14px !important;
+}
+
+.MFinfo th,
+.MFinfo td {
+    padding: 4px 8px !important;
+}
+
+.MFinfo thead {
+    background-color: #858282 !important;
+    border: 1px solid black !important;
+}
+
+.MFinfo tbody {
+    background-color: #aba4a4 !important;
+    border: 1px solid black !important;
+}
+
+.MFresult {
+    color: #aaa !important;
+    float: right !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    max-width: 150px !important;
+    height: 48px !important;
+}
+
+.MFresult option {
+    font-size: 20px !important;
+}
+
+.MFclose {
+    color: #aaa !important;
+    float: right !important;
+    font-size: 28px !important;
+    font-weight: bold !important;
+}
+
+.MFclose:hover,
+.MFclose:focus {
+    color: black !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+}
+
+.row-item-div {
+    display: flex !important;
+    padding-bottom: 14px !important;
+}
+
+.row-item-div .row-item-div-left {
+    width: 132px !important;
+    text-align: left !important;
+    font-size: 16px !important;
+    font-weight: 700;
+    padding: 10px;
+}
+
+.row-item-div .row-item-div-right {
+    text-align: left;
+    max-width: 680px;
+}
+.row-item-div .m-form-span-label {
+    text-align: left !important;
+    font-size: 16px !important;
+    font-weight: 700;
+    padding: 10px;
+    padding-left: 40px;
+}
+
+
+@-webkit-keyframes animatetop {
+    from {
+        top: -300px !important;
+        opacity: 0 !important;
+    }
+
+    to {
+        top: 0 !important;
+        opacity: 1 !important;
+    }
+}
+
+@keyframes animatetop {
+    from {
+        top: -300px !important;
+        opacity: 0 !important;
+    }
+
+    to {
+        top: 0 !important;
+        opacity: 1 !important;
+    }
+}
+
+.mTabModal {
+    display: none;
+    position: fixed !important;
+    z-index: 99999 !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: auto !important;
+    background-color: rgb(0, 0, 0) !important;
+    background-color: rgba(0, 0, 0, 0.4) !important;
+    -webkit-animation-name: animatetop !important;
+    -webkit-animation-duration: 0.4s !important;
+}
+
+.mTabModalContent {
+    background-color: #e5faef !important;
+    margin: 15% auto !important;
+    padding: 20px !important;
+    border: 1px solid #888 !important;
+    width: 80% !important;
+    max-width: 800px !important;
+    text-align: center !important;
+    margin: 100px auto !important;
+    -webkit-animation-name: animatetop !important;
+    -webkit-animation-duration: 0.4s !important;
+}
+
+.mTabModalClose {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: end !important;
+}
+
+.mTabModalButtonCross {
+    font-size: 32px !important;
+    cursor: pointer !important;
+}
+
+.mTabModalTextarea {
+    width: 100% !important;
+    height: 500px !important;
+    padding: 12px 20px !important;
+    box-sizing: border-box !important;
+    border: 2px solid #ccc !important;
+    border-radius: 4px !important;
+    background-color: #f8f8f8 !important;
+    font-size: 16px !important;
+    resize: none !important;
+}
+
+.mTabModalButtons {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 30px !important;
+    margin-top: 20px !important;
+}
+
+/* CSS */
+.mTabModalButtonOpen,
+.mTabModalButtonCancel {
+    align-items: center !important;
+    background-clip: padding-box !important;
+    background-color: #fa6400 !important;
+    border: 1px solid transparent !important;
+    border-radius: .25rem !important;
+    box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0 !important;
+    box-sizing: border-box !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    justify-content: center !important;
+    line-height: 1.25 !important;
+    margin: 0 !important;
+    min-height: 2rem !important;
+    min-width: 120px !important;
+    padding: calc(.875rem - 1px) calc(1.5rem - 1px) !important;
+    position: relative !important;
+    text-decoration: none !important;
+    transition: all 250ms !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    touch-action: manipulation !important;
+    vertical-align: baseline !important;
+    width: auto !important;
+}
+
+.mTabModalButtonOpen:hover,
+.mTabModalButtonCancel:hover,
+.mTabModalButtonOpen:focus .mTabModalButtonCancel:focus {
+    background-color: #fb8332 !important;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px !important;
+}
+
+.mTabModalButtonOpen:hover,
+.mTabModalButtonCancel:hover {
+    transform: translateY(-1px) !important;
+}
+
+.mTabModalButtonOpen:active,
+.mTabModalButtonCancel:active {
+    background-color: #c85000 !important;
+    box-shadow: rgba(0, 0, 0, .06) 0 2px 4px !important;
+    transform: translateY(0) !important;
+}
+
+.MFOptionGroup {
+    display: flex !important;
+}
+
+.mxResultModal {
+    display: none;
+    position: fixed !important;
+    z-index: 99999 !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: auto !important;
+    background-color: rgb(0, 0, 0) !important;
+    background-color: rgba(0, 0, 0, 0.4) !important;
+    -webkit-animation-name: animatetop !important;
+    -webkit-animation-duration: 0.4s !important;
+}
+
+.ResultModal-content {
+    background-color: #e5faef !important;
+    margin: 15% auto !important;
+    padding: 20px !important;
+    border: 1px solid #888 !important;
+    width: 80% !important;
+    max-width: 800px !important;
+    text-align: center !important;
+    margin: 100px auto !important;
+    -webkit-animation-name: animatetop !important;
+    -webkit-animation-duration: 0.4s !important;
+}
+
+.result-container {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    max-height: 60px !important;
+}
+
+.ResultInfo {
+    width: 320px !important;
+    margin: 0!important;
+    padding: 0!important;
+    max-width: 350px !important;
+    max-height: 30px !important;
+}
+
+.ResultInfo td,
+.ResultInfo th {
+    padding: 0 !important;
+    text-align: center!important;
+}
+.ResultInfo th {
+    background: #1a3b66!important;
+    color: white!important;
+}
+
+.xrLabel {
+    position: relative!important;
+    display: block!important;
+    max-width: 400px!important;
+    /* min-width: 180px!important; */
+    margin: 0!important;
+    border: 1px solid #222235!important;
+    background-color: white!important;
+    z-index: 10!important;
+  }
+  .xrLabel select {
+    border: none!important;
+    outline: none!important;
+    background: transparent!important;
+    -webkit-appearance: none!important;
+    -moz-appearance: none!important;
+    appearance: none!important;
+    border-radius: 0!important;
+    margin: 0!important;
+    display: block!important;
+    /* width: 100%!important; */
+    padding: 12px 35px 12px 12px!important;
+    font-size: 14px!important;
+    color: #232133!important;
+    width: 128px!important;
+    height: 40px!important;
+  }
+  .xrLabel:after {
+    position: absolute!important;
+    right: 0!important;
+    top: 5px!important;
+    width: 35px!important;
+    height: 100%!important;
+    line-height: 30px!important;
+    content: "∨"!important;
+    text-align: center!important;
+    color: #232133!important;
+    font-size: 18px!important;
+    font-weight: 800!important;
+    /* border-left: 1px solid #3C1C78!important; */
+    z-index: -1!important;
+  }
+
+.XRresultSendBtn, #ref_client_btn_2 {
+    background-color: #36A9AE!important;
+    background-image: linear-gradient(#37ADB2, #329CA0)!important;
+    border: 1px solid #2A8387!important;
+    border-radius: 4px!important;
+    box-shadow: rgba(0, 0, 0, 0.12) 0 1px 1px!important;
+    color: #FFFFFF!important;
+    cursor: pointer!important;
+    display: block!important;
+    font-family: -apple-system, ".SFNSDisplay-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif!important;
+    /* font-size: 16px!important; */
+    line-height: 100%!important;
+    margin: 0!important;
+    outline: 0!important;
+    padding: 12px!important;
+    text-align: center!important;
+    transition: box-shadow .05s ease-in-out, opacity .05s ease-in-out!important;
+    user-select: none!important;
+    -webkit-user-select: none!important;
+    touch-action: manipulation!important;
+    width: unset!important;
+    font-size: 14px!important;
+}
+#ref_client_btn_2 {
+    width: 60px!important;
+}
+
+.XRresultSendBtn:hover,
+#ref_client_btn_2:hover {
+    box-shadow: rgba(255, 255, 255, 0.3) 0 0 2px inset, rgba(0, 0, 0, 0.4) 0 1px 2px!important;
+    text-decoration: none!important;
+    transition-duration: .15s, .15s!important;
+}
+
+.XRresultSendBtn:active,
+#ref_client_btn_2:active {
+    box-shadow: rgba(0, 0, 0, 0.15) 0 2px 4px inset, rgba(0, 0, 0, 0.4) 0 1px 1px!important;
+}
+
+.XRresultSendBtn:disabled {
+    cursor: not-allowed!important;
+    opacity: .6!important;
+}
+
+.XRresultSendBtn:disabled:active {
+    pointer-events: none!important;
+}
+
+.XRresultSendBtn:disabled:hover {
+    box-shadow: none!important;
+}
+
+.close-container {
+    color: #aaa !important;
+    float: right !important;
+    font-size: 28px !important;
+    font-weight: bold !important;
+}
+
+.RXclose {
+    color: #aaa !important;
+    float: right !important;
+    font-size: 28px !important;
+    font-weight: bold !important;
+    margin-left: 20px;
+}
+
+.RXcloseTag {
+    margin-left: 30px !important;
+    white-space: pre-line !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    background-color: #f3f3f3 !important;
+    border: 1px solid #858282 !important;
+    border-radius: 3px !important;
+    padding: 5px !important;
+}
+
+.additionInput, #ref_client_id_2 {
+    height: 40px!important;
+    line-height: 40px!important;
+    margin: 4px!important;
+    background-color: white!important;
+    padding-left: 4px!important;
+    font-size: 12px!important;
+    outline: none!important;
+    border: 2px solid grey!important;
+    padding: 10px !important;
+    width: 168px !important;
+}
+
+#ref_client_id_2 {
+    height: 40px!important;
+    width: 200px!important;
+}
+
+#mResultInfo td, #mResultInfo th {
+    font-size: 14px!important;
+}
