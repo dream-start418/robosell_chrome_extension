@@ -1,6 +1,8 @@
 import "./content.css";
 import { useEffect, useState } from "react";
 let multi_result_modal_flag = false;
+let elementPairs: { inputField: string; modalButton: string }[] = [];
+
 const handleAutofill = (message: any) => {
   if (message.action === "AUTOFILL") {
     const formData = message.data;
@@ -147,7 +149,12 @@ const openResultModal = (data: any) => {
       { value: "5", text: "文字数超え" },
       { value: "6", text: "送信エラー" },
       { value: "7", text: "その他NG" },
+      { value: "8", text: "送信確認ボタンの出現" },
     ];
+
+    const reportOptions = [
+      { value: "2step", text: "送信確認ボタンの出現" },
+    ]
 
     let resultOptionsHtml = '';
     resultOptions.forEach(option => {
@@ -270,7 +277,26 @@ const openResultModal = (data: any) => {
       const mForm_CONTENT = document.getElementById('mformMFDiv');
       const addition_text = (document.getElementById('addition_memo') as HTMLInputElement).value;
       const user_api_key = localStorage.getItem("user_api_key");
-      const response = await fetch(`${host_url}api/send_result_site?api_key=${user_api_key}&domain=${mForm_CURRENT_DOMAIN}&option_id=${option_id}&contact_url=${mForm_CURRENT_URL}&content=${mForm_CONTENT}&customer_id=${customer_id}&memo=${addition_text}&manaId=${manaId}`);
+      
+      // Convert elementPairs to JSON string
+      const elementPairsJson = JSON.stringify(elementPairs);
+      const params = new URLSearchParams();
+      params.append('api_key', user_api_key);
+      params.append('domain', mForm_CURRENT_DOMAIN);
+      params.append('option_id', option_id);
+      params.append('contact_url', mForm_CURRENT_URL);
+      params.append('content', mForm_CONTENT?.innerHTML || '');
+      params.append('customer_id', customer_id);
+      params.append('memo', addition_text);
+      params.append('manaId', manaId || '');
+      params.append('element_pairs', elementPairsJson); // Add element_pairs parameter
+      console.log("elementpairs===>>>>>", elementPairs)
+      // Log the complete URL for debugging
+      const requestUrl = `${host_url}api/send_result_site?${params.toString()}`;
+      console.log('Request URL:', requestUrl);
+
+      const response = await fetch(requestUrl);
+      console.log('Response:', response);
       const result = await response.json();
 
       if (result.type !== 'OperationSuccess') {
@@ -278,15 +304,15 @@ const openResultModal = (data: any) => {
         return;
       }
 
+      // Clear the element pairs after successful submission
+      elementPairs = [];
+      saveElementPairs();
       alert(result.message);
     } catch (error) {
       alert('アップデート作業中です。完了次第、ご利用できます。\n作業を中断して今しばらくお待ちください。');
     }
   });
 };
-
-
-
 
 let selected_input_element = null;
 const displayModal = async (data, closeAction) => {
@@ -305,6 +331,7 @@ const displayModal = async (data, closeAction) => {
       const contentTextarea = document.createElement("div");
       contentTextarea.className = "content-textarea";
       contentTextarea.textContent = mForm_data["content"] || "";
+      contentTextarea.id = "content";
 
       const mForm_button = document.createElement("input");
       mForm_button.type = "hidden";
@@ -330,6 +357,7 @@ const displayModal = async (data, closeAction) => {
         mForm_button.type = "button";
         mForm_button.className = buttonClass;
         mForm_button.value = mForm_data[label] || "";
+        mForm_button.name = label;
         newMFDivRight.appendChild(mForm_button);
       });
     }
@@ -351,6 +379,7 @@ const displayModal = async (data, closeAction) => {
         mForm_button.type = "button";
         mForm_button.className = buttonClass;
         mForm_button.value = mForm_data[label] || "";
+        mForm_button.name = label;
         newMFDivRight.appendChild(mForm_button);
       });
     }
@@ -360,6 +389,7 @@ const displayModal = async (data, closeAction) => {
         mForm_button.type = "button";
         mForm_button.className = buttonClass;
         mForm_button.value = mForm_data[label] || "";
+        mForm_button.name = label;
         newMFDivRight.appendChild(mForm_button);
       });
     }
@@ -474,13 +504,13 @@ const displayModal = async (data, closeAction) => {
       } else {
         textToCopy = '';
       }
-      // navigator.clipboard.writeText(textToCopy)
-      //   .then(() => {
-      //     console.log('Text copied to clipboard:', textToCopy);
-      //   })
-      //   .catch((err) => {
-      //     console.error('Failed to copy text: ', err);
-      //   });
+      
+      // Save the button name
+      const buttonName = button.getAttribute('name') || button.getAttribute('id') || 'unnamed_button';
+      if (elementPairs.length > 0) {
+        elementPairs[elementPairs.length - 1].modalButton = buttonName || 'unnamed_button';
+      }
+      
       copyText(textToCopy);
       closeAction();
       document.body.focus();
@@ -542,6 +572,12 @@ const displayModal = async (data, closeAction) => {
 
 const ContentScript = () => {
   const displayFlagModal = (cur_element) => {
+    console.log("LLLLLLLLLL")
+    console.log(chrome.storage.local, "_______________")
+    const inputFieldName = cur_element.getAttribute('name') || cur_element.getAttribute('id') || 'unnamed_input';
+    elementPairs.push({ inputField: inputFieldName, modalButton: '' });
+    saveElementPairs();
+    console.log("elementPairs===>>>>>", elementPairs)
     chrome.storage.local.get(['checkboxState'], function (result) {
       const checkboxState = result.checkboxState === 'true';
       if (checkboxState) {
@@ -560,7 +596,6 @@ const ContentScript = () => {
       }
     });
   };
-
 
   useEffect(() => {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -594,7 +629,28 @@ const ContentScript = () => {
       element.addEventListener('dblclick', () => displayFlagModal(element));
     });
   }, []);
+
+  useEffect(() => {
+    // Load elementPairs when the component mounts
+    loadElementPairs();
+  }, []);
+
   return null;
+};
+
+// Add these functions to manage elementPairs in storage
+const saveElementPairs = () => {
+  chrome.storage.local.set({ elementPairsData: elementPairs }, function() {
+    console.log('Element pairs saved to storage');
+  });
+};
+
+const loadElementPairs = () => {
+  chrome.storage.local.get(['elementPairsData'], function(result) {
+    if (result.elementPairsData) {
+      elementPairs = result.elementPairsData;
+    }
+  });
 };
 
 export default ContentScript;
