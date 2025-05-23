@@ -1,7 +1,7 @@
 {
   "name": "robosell",
   "displayName": "Robosell",
-  "version": "10.3.6",
+  "version": "10.3.7",
   "description": "For supporting doctrack App Server",
   "author": "hayashi",
   "scripts": {
@@ -40,6 +40,16 @@
       "activeTab",
       "scripting",
       "storage"
+    ]
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@swc/core",
+      "esbuild",
+      "lmdb",
+      "msgpackr-extract",
+      "sharp"
     ]
   }
 }

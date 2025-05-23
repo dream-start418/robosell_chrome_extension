@@ -3,6 +3,22 @@ import { useEffect, useState } from "react";
 let multi_result_modal_flag = false;
 let elementPairs: { inputField: string; modalButton: string }[] = [];
 
+const resultOptions = [
+  { value: "0", text: "送信成功" },
+  { value: "1", text: "フォームなし" },
+  { value: "2", text: "対象外" },
+  { value: "3", text: "営業拒否" },
+  { value: "4", text: "ページ存在なし" },
+  { value: "5", text: "文字数超え" },
+  { value: "6", text: "送信エラー" },
+  { value: "7", text: "その他NG" },
+];
+
+const reportOptions = [
+  { value: "0", text: "一般エラー" },
+  { value: "1", text: "2次確認ボタンの出現" },
+];
+
 const handleAutofill = (message: any) => {
   if (message.action === "AUTOFILL") {
     const formData = message.data;
@@ -140,29 +156,12 @@ const openResultModal = (data: any) => {
     //   <option value="3">フォームなし</option>
     //   <option value="4">送信エラー</option>
     //   <option value="5">その他NG</option>`;
-    const resultOptions = [
-      { value: "0", text: "送信成功" },
-      { value: "1", text: "フォームなし" },
-      { value: "2", text: "対象外" },
-      { value: "3", text: "営業拒否" },
-      { value: "4", text: "ページ存在なし" },
-      { value: "5", text: "文字数超え" },
-      { value: "6", text: "送信エラー" },
-      { value: "7", text: "その他NG" },
-      { value: "8", text: "送信確認ボタンの出現" },
-    ];
-
-    const reportOptions = [
-      { value: "2step", text: "送信確認ボタンの出現" },
-    ]
-
     let resultOptionsHtml = '';
     resultOptions.forEach(option => {
       const selected = option.text === data.customer_option ? 'selected' : '';
       // console.log(option.text, "----", data.customer_option, "--=", selected)
       resultOptionsHtml += `<option value="${option.value}" ${selected}>${option.text}</option>`;
     });
-
 
     const infoResultModal = document.createElement('table');
     infoResultModal.classList.add('ResultInfo');
@@ -186,6 +185,27 @@ const openResultModal = (data: any) => {
     resultXRbtn.disabled = data.customer_id === '-' || data.customer_id == null;
     resultXRbtn.innerHTML = '結果登録';
 
+    // Add report button
+    const reportBtn = document.createElement('button');
+    reportBtn.classList.add('XRresultSendBtn');
+    reportBtn.setAttribute('id', 'reportBtn');
+    reportBtn.innerHTML = 'エラー報告';
+    reportBtn.style.marginLeft = '10px';
+    reportBtn.disabled = true; // Initially disabled
+
+    // Add event listener to enable/disable report button based on result selection
+    resultXR.addEventListener('change', () => {
+      const selectedOption = resultXR.options[resultXR.selectedIndex].text;
+      reportBtn.disabled = selectedOption !== '送信成功';
+    });
+
+    // Add click handler for report button
+    reportBtn.addEventListener('click', () => {
+      const reportModal = createReportModal();
+      document.body.appendChild(reportModal);
+      reportModal.style.display = 'block';
+    });
+
     const mForm_CONTENT = '';
     const addition_memo = document.createElement('input');
     addition_memo.setAttribute('placeholder', "報告する内容があれば入力ください");
@@ -195,6 +215,7 @@ const openResultModal = (data: any) => {
 
     resultBtnContainer.appendChild(xrlabel);
     resultBtnContainer.appendChild(resultXRbtn);
+    resultBtnContainer.appendChild(reportBtn);
     resultBtnContainer.appendChild(addition_memo);
 
     const closeContainer = document.createElement('div');
@@ -279,7 +300,6 @@ const openResultModal = (data: any) => {
       const user_api_key = localStorage.getItem("user_api_key");
       
       // Convert elementPairs to JSON string
-      const elementPairsJson = JSON.stringify(elementPairs);
       const params = new URLSearchParams();
       params.append('api_key', user_api_key);
       params.append('domain', mForm_CURRENT_DOMAIN);
@@ -289,8 +309,7 @@ const openResultModal = (data: any) => {
       params.append('customer_id', customer_id);
       params.append('memo', addition_text);
       params.append('manaId', manaId || '');
-      params.append('element_pairs', elementPairsJson); // Add element_pairs parameter
-      console.log("elementpairs===>>>>>", elementPairs)
+      
       // Log the complete URL for debugging
       const requestUrl = `${host_url}api/send_result_site?${params.toString()}`;
       console.log('Request URL:', requestUrl);
@@ -305,8 +324,7 @@ const openResultModal = (data: any) => {
       }
 
       // Clear the element pairs after successful submission
-      elementPairs = [];
-      saveElementPairs();
+
       alert(result.message);
     } catch (error) {
       alert('アップデート作業中です。完了次第、ご利用できます。\n作業を中断して今しばらくお待ちください。');
@@ -651,6 +669,104 @@ const loadElementPairs = () => {
       elementPairs = result.elementPairsData;
     }
   });
+};
+
+// First, add the report modal HTML creation function
+const createReportModal = () => {
+  const reportModal = document.createElement('div');
+  reportModal.classList.add('mxResultModal');
+  reportModal.id = "ReportModal";
+
+  const reportContent = document.createElement('div');
+  reportContent.classList.add('ResultModal-content');
+  reportContent.setAttribute('id', 'reportContentDiv');
+
+  const reportBtnContainer = document.createElement('div');
+  reportBtnContainer.classList.add('result-container');
+
+  // Create dropdown for report options
+  const reportLabel = document.createElement('label');
+  reportLabel.className = 'xrLabel report_label';
+  reportLabel.htmlFor = 'reportResult';
+  
+  const reportSelect = document.createElement('select');
+  reportSelect.classList.add('RXResult');
+  reportSelect.setAttribute('id', 'reportResult');
+  
+  let reportOptionsHtml = '';
+  reportOptions.forEach(option => {
+    reportOptionsHtml += `<option value="${option.value}">${option.text}</option>`;
+  });
+  reportSelect.innerHTML = reportOptionsHtml;
+  reportLabel.appendChild(reportSelect);
+
+  // Create buttons container
+  const buttonsContainer = document.createElement('div');
+  buttonsContainer.style.display = 'flex';
+  buttonsContainer.style.gap = '10px';
+  buttonsContainer.style.marginTop = '20px';
+
+  // Create submit button
+  const submitButton = document.createElement('button');
+  submitButton.className = 'XRresultSendBtn';
+  submitButton.textContent = '送信';
+  submitButton.onclick = async () => {
+    const reportValue = (document.getElementById('reportResult') as HTMLSelectElement).value;
+    try {
+      const host_url = "https://autofill.robosell.jp/";
+      const mForm_CURRENT_DOMAIN = window.location.hostname;
+      const mForm_CURRENT_URL = window.location.href;
+      const user_api_key = localStorage.getItem("user_api_key");
+      
+      // Convert elementPairs to JSON string
+      const elementPairsJson = JSON.stringify(elementPairs);
+      const params = new URLSearchParams();
+      params.append('api_key', user_api_key);
+      params.append('domain', mForm_CURRENT_DOMAIN);
+      params.append('contact_url', mForm_CURRENT_URL);
+      params.append('element_pairs', elementPairsJson);
+      params.append('report_option', reportValue); // Add the report option value
+
+      const requestUrl = `${host_url}api/send_report_site?${params.toString()}`;
+      console.log('Request URL:', requestUrl);
+
+      const response = await fetch(requestUrl);
+      console.log('Response:', response);
+      const result = await response.json();
+
+      if (result.type !== 'OperationSuccess') {
+        alert(result.message);
+        return;
+      }
+
+      // Clear the element pairs after successful submission
+      elementPairs = [];
+      saveElementPairs();
+      alert(result.message);
+      reportModal.remove();
+    } catch (error) {
+      alert('アップデート作業中です。完了次第、ご利用できます。\n作業を中断して今しばらくお待ちください。');
+    }
+  };
+
+  // Create cancel button
+  const cancelButton = document.createElement('button');
+  cancelButton.className = 'XRresultSendBtn';
+  cancelButton.style.backgroundColor = '#666';
+  cancelButton.textContent = 'キャンセル';
+  cancelButton.onclick = () => {
+    reportModal.remove();
+  };
+
+  buttonsContainer.appendChild(submitButton);
+  buttonsContainer.appendChild(cancelButton);
+
+  reportBtnContainer.appendChild(reportLabel);
+  reportBtnContainer.appendChild(buttonsContainer);
+  reportContent.appendChild(reportBtnContainer);
+  reportModal.appendChild(reportContent);
+
+  return reportModal;
 };
 
 export default ContentScript;

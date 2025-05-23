@@ -354,8 +354,8 @@
     margin: 15% auto !important;
     padding: 20px !important;
     border: 1px solid #888 !important;
-    width: 80% !important;
-    max-width: 800px !important;
+    width: 90% !important;
+    max-width: 910px !important;
     text-align: center !important;
     margin: 100px auto !important;
     -webkit-animation-name: animatetop !important;
@@ -443,6 +443,7 @@
     /* font-size: 16px!important; */
     line-height: 100%!important;
     margin: 0!important;
+    margin-left: 5px !important;
     outline: 0!important;
     padding: 12px!important;
     text-align: center!important;
@@ -529,3 +530,39 @@
 #mResultInfo td, #mResultInfo th {
     font-size: 14px!important;
 }
+
+#reportBtn {
+    background-color: #36A9AE;
+    background-image: linear-gradient(#37ADB2, #329CA0);
+    border: 1px solid #2A8387;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0 1px 1px;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: -apple-system, ".SFNSDisplay-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 100%;
+    margin: 0;
+    outline: 0;
+    padding: 12px;
+    text-align: center;
+    transition: box-shadow .05s ease-in-out, opacity .05s ease-in-out;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: unset;
+    font-size: 14px;
+  }
+  
+  #reportBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .xrLabel.report_label {
+    max-width: 800px!important;
+  }
+
+  .xrLabel.report_label select {
+    width: 100%!important;
+  }
