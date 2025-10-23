@@ -6,6 +6,7 @@ import MultiUrl from "./multiPages"
 import icon from "./assets/icon.png";
 import update_icon from "./assets/update_1.png";
 import ReadyWork from "./readyWork";
+import WorkPreparation from "./workPreparation";
 
 
 const Modal = ({
@@ -60,6 +61,7 @@ function IndexPopup() {
   const [showMultiurl, setShowMultiUrl] = useState(false);
   const [isPanelVisible, setPanelVisible] = useState(false);
   const [showUpdateMessage, setShowUpdateMessage] = useState(false);
+  const [showWorkPreparation, setShowWorkPreparation] = useState(false);
   const [modalVisible, setModalVisible] = useState(false); // Modal visibility state
   const [modalContent, setModalContent] = useState({ title: "", message: "", page_url: "" }); // Modal content state
   const [todaySuccessCount, setTodaySuccessCount] = useState(0);
@@ -254,8 +256,8 @@ function IndexPopup() {
 
 
   // const iconUrl = chrome.runtime.getURL("icon.png");
-  if (showReadyWork) {
-    return <ReadyWork onBack={() => setShowReadyWork(false)} />;
+  if (showWorkPreparation) {
+    return <WorkPreparation onBack={() => setShowWorkPreparation(false)} />;
   } else if (showMultiurl) {
     return <MultiUrl onBack={() => setShowMultiUrl(false)} />;
   }
@@ -324,7 +326,7 @@ function IndexPopup() {
             一括ページ展開
           </button>
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded text-base"
-            onClick={() => setShowReadyWork(true)} >
+            onClick={() => setShowWorkPreparation(true)} >
             作業準備
           </button>
         </div>
