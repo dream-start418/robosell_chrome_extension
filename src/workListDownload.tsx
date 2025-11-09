@@ -98,20 +98,25 @@ function WorkListDownload({ onBack }) {
         </div>
       </div>
       <div className="bg-amber-100 py-4">
-        <div className="p-4">
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              APIキー
-            </label>
-            <input
-              type="text"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              placeholder="APIキー"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+        <div className="">
+          <div className="flex items-center bg-amber-100 py-4">
+            <div className="w-1/4">
+              <label className="block text-gray-500 font-bold text-right mb-1 mb-0 pr-4">
+                APIキー
+              </label>
+            </div>
+            <div className="w-2/3">
+              <input
+                className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                id="api_key"
+                type="text"
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder="API_KEY"
+              />
+            </div>
           </div>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               リストID
             </label>
@@ -122,29 +127,46 @@ function WorkListDownload({ onBack }) {
               placeholder="リストID"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+          </div> */}
+          <div className="flex items-center bg-amber-100 py-4">
+            <div className="w-1/4">
+              <label className="block text-gray-500 font-bold text-right mb-1 mb-0 pr-4">
+                リストID
+              </label>
+            </div>
+            <div className="w-2/3">
+              <input
+                className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                id="mana_id"
+                type="text"
+                value={listId}
+                onChange={(e) => setListId(e.target.value)}
+                placeholder=""
+              />
+            </div>
           </div>
-          {message && (
+          {/* {message && (
             <div className="mb-4 p-2 text-sm text-center bg-blue-100 text-blue-800 rounded">
               {message}
             </div>
-          )}
+          )} */}
         </div>
         <div className="flex justify-between p-2 px-6">
           <button 
-            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded text-base disabled:opacity-50"
+            className="py-2 px-6 mx-4 rounded-lg text-sm font-medium text-white bg-teal-600"
             onClick={handleDownload}
             disabled={isLoading}
           >
             {isLoading ? "処理中..." : "ダウンロードする"}
           </button>
           <button 
-            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded text-base"
+            className="py-2 px-6 mx-4 rounded-lg text-sm font-medium bg-teal-200 text-teal-800"
             onClick={onBack}
           >
             戻る
           </button>
         </div>
-        <div className="flex justify-center p-2">
+        {/* <div className="flex justify-center p-2">
           <button 
             className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-1 px-3 rounded text-sm"
             onClick={() => {
@@ -155,7 +177,7 @@ function WorkListDownload({ onBack }) {
           >
             クリア
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -30,13 +30,13 @@ function WorkPreparation({ onBack }) {
       <div className="bg-amber-100 py-4">
         <div className="flex justify-between p-2 px-6">
           <button 
-            className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded text-base"
+            className="bg-yellow-400 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded text-base"
             onClick={() => setShowDownload(true)}
           >
             作業リストDL
           </button>
           <button 
-            className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded text-base"
+            className="bg-orange-400 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded text-base"
             onClick={() => setShowApplication(true)}
           >
             リスト追加申請
@@ -44,7 +44,7 @@ function WorkPreparation({ onBack }) {
         </div>
         <div className="flex justify-center p-2">
           <button 
-            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded text-base"
+            className="py-2 px-6 mx-4 rounded-lg text-sm font-medium bg-teal-200 text-teal-800"
             onClick={onBack}
           >
             戻る
