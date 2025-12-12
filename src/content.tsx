@@ -112,7 +112,9 @@ const openResultModal = (data: any) => {
     const modal = document.querySelector('.mxResultModal');
     if (modal) modal.remove();
   };
-  console.log(data);
+  if(data == "NO_DATA_FOUND") {
+    return "NO_DATA_FOUND";
+  }
   // data.custom_no = data.custom_no || '-';
   data.customer_id = data.customer_id || '-';
   data.customer_option = data.customer_option || 'その他NG';
@@ -253,13 +255,11 @@ const openResultModal = (data: any) => {
 
   document.getElementById('ref_client_btn_2')?.addEventListener('click', async () => {
     const sel_id = (document.getElementById('ref_client_id_2') as HTMLInputElement).value;
-    console.log(sel_id);
     try {
       const host_url = "https://autofill.robosell.jp/";
       const mForm_CURRENT_DOMAIN = window.location.hostname;
       const user_api_key = localStorage.getItem("user_api_key");
       const manaId = localStorage.getItem("user_mana_id");
-      console.log(localStorage.getItem("user_api_key"));
       try {
         const response = await fetch(`${host_url}api/get_text_data?api_key=${user_api_key}&sel_id=${sel_id}`);
         const result = await response.json();
@@ -310,12 +310,9 @@ const openResultModal = (data: any) => {
       params.append('memo', addition_text);
       params.append('manaId', manaId || '');
       
-      // Log the complete URL for debugging
       const requestUrl = `${host_url}api/send_result_site?${params.toString()}`;
-      console.log('Request URL:', requestUrl);
 
       const response = await fetch(requestUrl);
-      console.log('Response:', response);
       const result = await response.json();
 
       if (result.type !== 'OperationSuccess') {
@@ -344,6 +341,7 @@ const displayModal = async (data, closeAction) => {
 
     const newMFDivRight = document.createElement("div");
     newMFDivRight.className = "row-item-div-right";
+
 
     if (leftLabel === "本文") {
       const contentTextarea = document.createElement("div");
@@ -484,7 +482,6 @@ const displayModal = async (data, closeAction) => {
     // createElementDiv("問い合わせ件名", mForm_data, ["service_fee"], "mformButton"),
     createElementDiv("本文", mForm_data, ["content"], "mformButton"),
   ];
-  console.log("displayModal----", closeAction);
   createModal(contentDivs, infoTableHtml, "", closeAction);
   function copyText(text) {
     if (navigator.clipboard && window.isSecureContext) {
@@ -545,12 +542,10 @@ const displayModal = async (data, closeAction) => {
 
   document.getElementById('ref_client_btn_1')?.addEventListener('click', async () => {
     const sel_id = (document.getElementById('ref_client_id_1') as HTMLInputElement).value;
-    console.log(sel_id);
     try {
       const host_url = "https://autofill.robosell.jp/";
       const mForm_CURRENT_DOMAIN = window.location.hostname;
       const user_api_key = localStorage.getItem("user_api_key");
-      console.log(localStorage.getItem("user_api_key"));
       try {
         const response = await fetch(`${host_url}api/get_text_data?api_key=${user_api_key}&domain=${mForm_CURRENT_DOMAIN}&sel_id=${sel_id}`);
         const result = await response.json();
@@ -590,12 +585,10 @@ const displayModal = async (data, closeAction) => {
 
 const ContentScript = () => {
   const displayFlagModal = (cur_element) => {
-    console.log("LLLLLLLLLL")
-    console.log(chrome.storage.local, "_______________")
     const inputFieldName = cur_element.getAttribute('name') || cur_element.getAttribute('id') || 'unnamed_input';
     elementPairs.push({ inputField: inputFieldName, modalButton: '' });
-    saveElementPairs();
-    console.log("elementPairs===>>>>>", elementPairs)
+    // saveElementPairs();
+    // console.log("elementPairs===>>>>>", elementPairs)
     chrome.storage.local.get(['checkboxState'], function (result) {
       const checkboxState = result.checkboxState === 'true';
       if (checkboxState) {
@@ -633,19 +626,160 @@ const ContentScript = () => {
         lastModal.style.display = 'block';
       }
       if (message.action === "REGISTER_RESULT") {
-        openResultModal(message.data);
+        const result = openResultModal(message.data);
         localStorage.setItem("user_api_key", message.user_api_key);
         localStorage.setItem("user_mana_id", message.user_mana_id);
+        if(result) {
+          sendResponse({ status: "NO_DATA_FOUND" });
+        }
       }
       sendResponse({ status: "Form data filled!" });
     });
   }, []);
 
   useEffect(() => {
-    const inputElements = document.querySelectorAll('input, textarea');
-    inputElements.forEach((element) => {
-      element.addEventListener('dblclick', () => displayFlagModal(element));
+    // Helper function to validate if an element is a valid input/textarea
+    const isValidInputElement = (element: HTMLElement): boolean => {
+      if (!element || (element.tagName !== 'INPUT' && element.tagName !== 'TEXTAREA')) {
+        return false;
+      }
+      
+      const inputElement = element as HTMLInputElement | HTMLTextAreaElement;
+      if (inputElement.type === 'hidden' || 
+          inputElement.type === 'button' || 
+          inputElement.type === 'submit' || 
+          inputElement.type === 'reset' ||
+          inputElement.type === 'checkbox' ||
+          inputElement.type === 'radio' ||
+          inputElement.disabled ||
+          inputElement.readOnly) {
+        return false;
+      }
+      
+      return true;
+    };
+
+    // Helper function to find a valid input/textarea element
+    const findValidInputElement = (targetElement?: HTMLElement): HTMLElement | null => {
+      // First, try the target element if provided
+      if (targetElement && isValidInputElement(targetElement)) {
+        return targetElement;
+      }
+      
+      // // Try the active element
+      // const activeElement = document.activeElement as HTMLElement;
+      // if (activeElement && isValidInputElement(activeElement)) {
+      //   return activeElement;
+      // }
+      
+      // If target element is inside a form, try to find the first valid input in that form
+      // const form = targetElement?.closest('form') || activeElement?.closest('form');
+      // if (form) {
+      //   const formInput = form.querySelector('input:not([type="hidden"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]):not([disabled]):not([readonly]), textarea:not([disabled]):not([readonly])') as HTMLElement;
+      //   if (formInput && isValidInputElement(formInput)) {
+      //     return formInput;
+      //   }
+      // }
+      
+      // If target element exists but is not a valid input, try to find a valid input near it
+      if (targetElement) {
+        // Check if target is inside a label or form field container
+        const container = targetElement.closest('label, .hs-form-field, .form-group, [class*="field"], [class*="input"]');
+        if (container) {
+          const nearbyInput = container.querySelector('input:not([type="hidden"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]):not([disabled]):not([readonly]), textarea:not([disabled]):not([readonly])') as HTMLElement;
+          if (nearbyInput && isValidInputElement(nearbyInput)) {
+            return nearbyInput;
+          }
+        }
+      }
+      
+      // // Last resort: try to find the first visible input/textarea on the page
+      // const allInputs = document.querySelectorAll('input:not([type="hidden"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]):not([disabled]):not([readonly]), textarea:not([disabled]):not([readonly])');
+      // for (let i = 0; i < allInputs.length; i++) {
+      //   const input = allInputs[i] as HTMLElement;
+      //   if (isValidInputElement(input)) {
+      //     return input;
+      //   }
+      // }
+      
+      return null;
+    };
+
+    // Debounce mechanism to prevent duplicate calls
+    let lastDoubleClickTime = 0;
+    let lastDoubleClickTarget: HTMLElement | null = null;
+    const DOUBLE_CLICK_DEBOUNCE_MS = 300;
+
+    // Use event delegation to handle dynamically added elements with improved logic
+    const handleDoubleClick = (event: MouseEvent) => {
+      // Prevent event from bubbling to avoid duplicate calls
+      event.stopPropagation();
+      
+      const target = event.target as HTMLElement;
+      const currentTime = Date.now();
+      
+      // Check if this is a duplicate call (same target within debounce window)
+      if (lastDoubleClickTarget === target && 
+          (currentTime - lastDoubleClickTime) < DOUBLE_CLICK_DEBOUNCE_MS) {
+        return;
+      }
+      
+      // Update last click info
+      lastDoubleClickTime = currentTime;
+      lastDoubleClickTarget = target;
+      
+      // Find a valid input element using the target as starting point
+      const inputElement = findValidInputElement(target);
+      
+      if (inputElement) {
+        // Focus the element first
+        inputElement.focus();
+        displayFlagModal(inputElement);
+      }
+    };
+    
+    // Only attach to document with capture phase - this should be sufficient
+    document.addEventListener('dblclick', handleDoubleClick, true);
+
+    // Track iframes that already have listeners to prevent duplicates
+    const iframesWithListeners = new WeakSet<Document>();
+    
+    // Also handle iframes (HubSpot forms are often in iframes)
+    const handleIframeEvents = () => {
+      const iframes = document.querySelectorAll('iframe');
+      iframes.forEach((iframe) => {
+        try {
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+          if (iframeDoc && !iframesWithListeners.has(iframeDoc)) {
+            // Attach double-click event listener
+            iframeDoc.addEventListener('dblclick', handleDoubleClick, true);
+            iframesWithListeners.add(iframeDoc);
+          }
+        } catch (e) {
+          // Cross-origin iframe, can't access
+        }
+      });
+    };
+
+    // Check for iframes initially and after a delay (for dynamically loaded HubSpot forms)
+    handleIframeEvents();
+    setTimeout(handleIframeEvents, 2000);
+    setTimeout(handleIframeEvents, 5000);
+
+    // Watch for new iframes being added
+    const observer = new MutationObserver(() => {
+      handleIframeEvents();
     });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+
+    // Cleanup function to remove event listeners
+    return () => {
+      document.removeEventListener('dblclick', handleDoubleClick, true);
+      observer.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -659,7 +793,6 @@ const ContentScript = () => {
 // Add these functions to manage elementPairs in storage
 const saveElementPairs = () => {
   chrome.storage.local.set({ elementPairsData: elementPairs }, function() {
-    console.log('Element pairs saved to storage');
   });
 };
 
@@ -728,10 +861,8 @@ const createReportModal = () => {
       params.append('report_option', reportValue); // Add the report option value
 
       const requestUrl = `${host_url}api/send_report_site?${params.toString()}`;
-      console.log('Request URL:', requestUrl);
 
       const response = await fetch(requestUrl);
-      console.log('Response:', response);
       const result = await response.json();
 
       if (result.type !== 'OperationSuccess') {

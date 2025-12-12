@@ -1,7 +1,7 @@
 {
   "name": "robosell",
   "displayName": "Robosell",
-  "version": "10.3.7",
+  "version": "11.6.4",
   "description": "For supporting doctrack App Server",
   "author": "hayashi",
   "scripts": {

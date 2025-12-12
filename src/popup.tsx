@@ -115,10 +115,17 @@ function IndexPopup() {
           mana_id: mana_id,
         }
       });
-      console.log(response);
-      const scriptData = JSON.parse(response.data.user_data);
-      localStorage.setItem("MFORM_MODAL_DATA", scriptData);
-      return scriptData;
+      if(response.data.user_data) {
+        const scriptData = JSON.parse(response.data.user_data);
+        localStorage.setItem("MFORM_MODAL_DATA", scriptData);
+        return scriptData;
+      } else {
+        alert(response.data.message);
+        return ("NO_DATA_FOUND");
+      }
+    } else {
+      alert("APIキーが見つかりません。");
+      return null;
     }
   };
 
@@ -137,17 +144,6 @@ function IndexPopup() {
   }
 
   const packageJson = require('../package.json');
-
-  // const getVersion = async () => {
-  //   const response = await axios.get(`${host_url}api/get_extension_version`) as any;
-  //   if(response.state == "SUCCESS") {
-  //     return compareVersions(response.version, packageJson.version)
-  //   }
-  //   else {
-  //     return 0
-  //   }
-
-  // }
 
   const handleAutoFillClick = async () => {
     const sendData = await getUserData();
@@ -177,18 +173,6 @@ function IndexPopup() {
     });
   }
 
-  // const handleRegisterResult = async () => {
-  //   const sendData = await getUserData();
-  //   // console.log(sendData);
-  //   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-  //     if (tabs[0]?.id) {
-  //       chrome.tabs.sendMessage(tabs[0].id, { action: "REGISTER_RESULT", data: sendData, user_api_key: localStorage.getItem("user_api_key"), user_mana_id: localStorage.getItem("user_mana_id") }, (response) => {
-  //         console.log("cache message_state");
-  //         console.log(response)
-  //       })
-  //     }
-  //   })
-  // }
   const handleRegisterResult = async () => {
     const sendData = await getUserData();
 
@@ -206,7 +190,6 @@ function IndexPopup() {
           },
           (response) => {
             if (response === undefined) {
-              console.error("Failed to send message. URL:", currentTabUrl);
               setModalContent({
                 title: "メッセージ送信失敗",
                 message: `ページ: ${currentTabUrl} へのメッセージの送信に失敗しました。送信ボタンをクリックして、この情報をサーバーに報告してください。`,
@@ -244,7 +227,6 @@ function IndexPopup() {
           setTodaySuccessCount(response.data.successCount);
           setCheckConnection("");
         } else {
-          console.log(response.data.message);
           setCheckConnection("接続失敗")
         }
       } catch (error) {
